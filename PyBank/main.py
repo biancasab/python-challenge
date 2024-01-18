@@ -5,51 +5,43 @@ csvpath = os.path.join('Resources', 'budget_data.csv')
 
 with open(csvpath) as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',')
-    #print(csvreader)
-
     csv_header = next(csvreader)
-    #print (f"CSV Header: {csv_header}")
     csvreaderlist = list(csvreader)
-    #print (csvreaderlist)
     
+    # formula for total months
     total_months = len(list(csvreaderlist))
+    # formula for total amount
     total_amount = sum(float(row[1]) for row in csvreaderlist)  
 
-    # total_amount = 0
-    # for row in csvreaderlist:
-    # total_amount = total_amount + float(row[1])
-
-    # Populate data
+    # Populate data (profits/losses column)
     data = []
     for row in csvreaderlist:
         data.append(float(row[1]))
-    # print(data)
+
+    # add the changes in Profit/Losses to a list
     changes = []
     for index in range(len(data) - 1):
-        # print(index)
-        # print(index + 1)
-        # print(test[index])
-        # print(test[index + 1])
         changes.append(data[index +1] - data[index])
-    # print(changes)
+
+    # formula for average change
     average = (sum(changes)/len(changes))
+    # formula for greatest increase and greatest decrease in profits
     maximum = max(changes)
     minimum = min(changes)
     
+    # formula to match increase and decrease to the respective dates
     max_index = changes.index(maximum)
     min_index = changes.index(minimum)
 
     dates = []
     for row in csvreaderlist:
         dates.append(row[0])
-    # print(dates)
 
     max_date = dates[max_index+1]
     min_date = dates[min_index+1]
 
-    print(min_date)
-    print(max_date)
 
+# print out to the terminal
 print ("Financial Analysis")
 print ("-------------------------------")
 print (f"Total Months: {total_months}")
@@ -58,8 +50,16 @@ print (f"Average Change: ${average}")
 print (f"Greatest Increase in Profits: {max_date} ${maximum}")
 print (f"Greatest Decrease in Profits: {min_date} ${minimum}")
 
-# # Specify the file to write to
-# output_path = os.path.join("..", "output", "budget_data_results.csv")
+#  Specify the file to write to
+output_path = os.path.join("Analysis", "budget_data_results.txt")
 
-# # Open the file using "write" mode. Specify the variable to hold the contents
-# with open(output_path, 'w') as csvfile:
+#  Open the file using "write" mode. Specify the variable to hold the contents
+#  source for below: https://blog.enterprisedna.co/python-write-to-file/
+with open(output_path, 'w', newline='') as file:
+    file.write ("Financial Analysis \n") 
+    file.write ("------------------------------- \n") 
+    file.write (f"Total Months: {total_months} \n") 
+    file.write (f"Total: ${total_amount} \n") 
+    file.write (f"Average Change: ${average} \n") 
+    file.write (f"Greatest Increase in Profits: {max_date} ${maximum} \n")
+    file.write(f"Greatest Decrease in Profits: {min_date} ${minimum} \n")
